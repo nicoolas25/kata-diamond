@@ -2,16 +2,19 @@ module Diamond
   SPACE = "-".freeze
   LETTERS = ("A".."Z").to_a.freeze
 
-  def self.print_diamond(letter)
-    height = LETTERS.index(letter)
+  def self.symmetry(collection)
+    collection + collection.reverse[1..-1]
+  end
 
-    quarters = (0..height).map do |current_height|
-      line = Array.new(height + 1, SPACE)
-      line[current_height] = LETTERS[current_height]
-      line
+  def self.print_diamond(letter)
+    height = LETTERS.index(letter) || raise(ArgumentError, "Unsupported letter #{letter}")
+
+    lines = (0..height).map do |current_height|
+      half_line = Array.new(height + 1, SPACE)
+      half_line[-1 - current_height] = LETTERS[current_height]
+      _full_line = symmetry(half_line)
     end
 
-    quarters.each { |row| puts row.reverse.join + row[1..-1].join }
-    quarters.reverse[1..-1].each { |row| puts row.reverse.join + row[1..-1].join }
+    symmetry(lines).each { |line| puts line.join }
   end
 end
